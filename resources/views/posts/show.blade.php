@@ -21,7 +21,7 @@
                 <ul>
                     @foreach ($similares as $similar)
                         <li class="mb-4">
-                            <a class="flex" href="{{route('post.show', $similar)}}">
+                            <a class="flex" href="{{route('posts.show', $similar)}}">
                                 <img class="w-36 h-20 object-cover object-center" src="{{Storage::url($similar->image->url)}}" alt="">
                                 <span class="ml-2 text-gray-600">{{$similar->name}}</span>
                             </a>
