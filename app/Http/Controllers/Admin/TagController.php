@@ -8,9 +8,13 @@ use App\Models\Tag;
 
 class TagController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        $this->middleware('can:admin.tags.index')->only('index');
+        $this->middleware('can:admin.tags.edit')->only('edit', 'update');
+        $this->middleware('can:admin.tags.create')->only('create','store');
+        $this->middleware('can:admin.tags.destroy')->only('destroy');
+    }
     public function index()
     {
         $tags = Tag::all();
@@ -48,17 +52,7 @@ class TagController extends Controller
         return redirect()->route('admin.tags.edit', compact('tag'))->with('info','La Etiqueta se creó con exito');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Tag $tag)
-    {
-        return view('admin.tags.show', compact('tag'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
+    
     public function edit(Tag $tag)
     {
         $colors = [

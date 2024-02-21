@@ -3,7 +3,7 @@
 @section('title', 'AQ Laravel')
 
 @section('content_header')
-    <h1>Detalles del Post</h1>
+    <h1>Mostrar Rol</h1>
 @stop
 
 @section('content')

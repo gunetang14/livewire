@@ -8,14 +8,19 @@ use App\Models\Post;
 use App\Models\Category;
 use App\Models\Tag;
 use App\Http\Requests\PostRequest;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        $this->middleware('can:admin.posts.index')->only('index');
+        $this->middleware('can:admin.posts.edit')->only('edit', 'update');
+        $this->middleware('can:admin.posts.create')->only('create','store');
+        $this->middleware('can:admin.posts.destroy')->only('destroy');
+    }
     public function index()
     {
         return view('admin.posts.index');
@@ -47,28 +52,22 @@ class PostController extends Controller
                 'url' => $url
             ]);
         }
+
+        Cache::flush(); // para eliminar todos los datos en chace y se actualice la base de datos
+
         if($request->tags){
             $post->tags()->attach($request->tags);
         }
         return redirect()->route('admin.posts.edit', $post);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Post $post)
-    {
-        return view('admin.posts.show', compact('post'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
+    
     public function edit(Post $post)
     {
         $this->authorize('author', $post);
         $categories = Category::pluck('name', 'id');
         $tags = Tag::all();
+        
         return view('admin.posts.edit', compact('post', 'categories', 'tags'));
     }
 
@@ -95,6 +94,7 @@ class PostController extends Controller
         if($request->tags){
             $post->tags()->sync($request->tags);
         }
+        Cache::flush(); // para eliminar todos los datos en chace y se actualice la base de datos
         return redirect()->route('admin.posts.edit', $post)->with('info', 'El Post se actualizó con exito');
     }
 
@@ -105,6 +105,7 @@ class PostController extends Controller
     {
         $this->authorize('author', $post);
         $post->delete();
+        Cache::flush(); // para eliminar todos los datos en chace y se actualice la base de datos
         return redirect()->route('admin.posts.index')->with('info', 'El Post se eliminó con exito');
     }
 }

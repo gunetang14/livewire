@@ -3,11 +3,11 @@
 @section('title', 'AQ Laravel')
 
 @section('content_header')
-    <h1>Mostrar Detalles de Categoria</h1>
+    <h1>Lista de Usuarios</h1>
 @stop
 
 @section('content')
-    <p>Bienvenido al panel de Administrador</p>
+    @livewire('admin.users-index')
 @stop
 
 @section('css')
